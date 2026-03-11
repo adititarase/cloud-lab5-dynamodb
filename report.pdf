@@ -1,1 +1,47 @@
+AWS Cloud Lab 5 – DynamoDB Integration with EC2
+1. Objective
+To connect an Amazon EC2 instance to DynamoDB using an IAM role and perform CRUD operations securely without embedding AWS credentials.
 
+2. DynamoDB Table Details
+Attribute	Description
+Table Name	LabTable
+Partition Key	id
+Datatypes Used	String, Number, Boolean, List, Map
+
+Sample Item Inserted:
+{
+  "id": 2,
+  "name": "User2",
+  "isActive": true,
+  "tags": ["tag1","tag2"],
+  "metadata": {"role":"admin"}
+}
+
+3. IAM Role Configuration
+Role Name: EC2-DynamoDB-Role
+Policy Attached: AmazonDynamoDBFullAccess
+Purpose: Allows EC2 to access DynamoDB without AWS keys.
+
+Steps Taken:
+Created IAM role for EC2 in AWS IAM.
+Attached AmazonDynamoDBFullAccess policy.
+Attached the role to EC2 instance.
+
+4. CRUD Operations
+All commands executed from EC2 terminal.
+Create Item:
+aws dynamodb put-item --table-name LabTable --item '{"id":{"S":"2"},"name":{"S":"User2"}}'
+
+Read Item:
+aws dynamodb get-item --table-name LabTable --key '{"id":{"S":"2"}}'
+
+Update Item:
+aws dynamodb update-item --table-name LabTable --key '{"id":{"S":"2"}}' --update-expression "SET name = :n" --expression-attribute-values '{":n":{"S":"UpdatedUser"}}'
+
+Delete Item:
+aws dynamodb delete-item --table-name LabTable --key '{"id":{"S":"2"}}'
+
+5. Security Considerations
+EC2 accesses DynamoDB via IAM role – no hard-coded credentials.
+Role attached ensures least privilege for lab operations.
+Policy used: AmazonDynamoDBFullAccess .
